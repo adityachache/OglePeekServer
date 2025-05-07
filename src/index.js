@@ -1,6 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+
+//Routes
+const adminRoute = require("../routes/adminRoute")
+const authRoute = require("../routes/authRoute")
+const orderRoute = require("../routes/orderRoute")
+const productRoute = require("../routes/productRoute")
+
 
 //.env
 const dotenv = require("dotenv");
@@ -22,6 +29,13 @@ mongoose.connect(MONGO_LOCAL_URI, { useNewUrlParser: true, useUnifiedTopology: t
         console.error('❌ MongoDB connection error:', err);
         process.exit(1);
     });
+
+
+//Using the routes
+app.use("/api/orders", orderRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/product", productRoute);
+app.use("/api/admin", adminRoute);
 
 
 app.get("/", (req, res) => {
