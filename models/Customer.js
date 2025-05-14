@@ -19,4 +19,17 @@ const customerSchema = new mongoose.Schema({
     password: { type: String, required: true },
 }, { timestamps: true });
 
+
+// Password hashing middleware before saving the customer
+customerSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+// Method to compare the hashed password with the one entered by the user
+customerSchema.methods.comparePassword = async function (enteredPassword) {
+    return bcrypt.compare(enteredPassword, this.password);
+};
+
 module.exports = mongoose.model('Customer', customerSchema);
