@@ -9,7 +9,17 @@ const productSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     inStock: { type: Number, default: 0 },        // quantity in stock
     description: { type: String },                     // optional description of the product
-    size: { type: String }
+    size: { type: String },
+    images: {
+        type: [String],
+        required: true,
+        validate: {
+            validator: function (arr) {
+                return arr.length > 0;
+            },
+            message: 'Product must have at least one image.'
+        }
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);
