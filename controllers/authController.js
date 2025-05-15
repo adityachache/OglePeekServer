@@ -56,20 +56,20 @@ module.exports.loginHandlerViaEmail = async (req, res) => {
             return res.status(400).json({ error: "CAPTCHA verification failed!" });
         }
         // Find the customer by email
-        const foundCutomer = await Customer.findOne({ email });
-        if (!foundCutomer) {
+        const foundCustomer = await Customer.findOne({ email });
+        if (!foundCustomer) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Compare the password with the hashed password in the database
-        const isMatch = await foundCutomer.comparePassword(password);
+        const isMatch = await foundCustomer.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Generate JWT token
         const data2 = {
-            customer: { id: foundCutomer._id }
+            customer: { id: foundCustomer._id }
         };
         const authToken = jwt.sign(data2, secretKey, { expiresIn: '1h' });
 
@@ -96,20 +96,20 @@ module.exports.loginHandlerViaPhone = async (req, res) => {
             return res.status(400).json({ error: "CAPTCHA verification failed!" });
         }
         // Find the customer by email
-        const foundCutomer = await Customer.findOne({ phone });
-        if (!foundCutomer) {
+        const foundCustomer = await Customer.findOne({ phone });
+        if (!foundCustomer) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Compare the password with the hashed password in the database
-        const isMatch = await foundCutomer.comparePassword(password);
+        const isMatch = await foundCustomer.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Generate JWT token
         const data2 = {
-            customer: { id: foundCutomer._id }
+            customer: { id: foundCustomer._id }
         };
         const authToken = jwt.sign(data2, secretKey, { expiresIn: '1h' });
 

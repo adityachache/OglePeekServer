@@ -8,7 +8,7 @@ const { loginHandlerViaEmail, loginHandlerViaPhone, registerHandler } = require(
 
 //Auth Controller without Capthcha Verification (For Testing)
 const { loginHandlerViaEmailTest, loginHandlerViaPhoneTest, registerTestHandler } = require("../controllers/authControllerTest");
-const { catchAsync } = require("../utils/catchAsync")
+const catchAsync = require("../utils/catchAsync")
 
 // Testing the req body for register and login (Main Routes)
 const { validateCustomerRegister } = require("../middlewares/validateCustomerRegister");
@@ -16,7 +16,7 @@ const { validateCustomerLoginViaEmail, validateCustomerLoginViaPhone } = require
 
 // Testing the req body for register and login (Without captch Verification)
 const { validateCustomerRegisterTest } = require("../middlewares/validateCustomerRegisterTest");
-const { validateCustomerLoginViaEmailTest, validateCustomerLoginViaPhoneTest } = require("../middlewares/validateCutomerLoginTest")
+const { validateCustomerLoginViaEmailTest, validateCustomerLoginViaPhoneTest } = require("../middlewares/validateCustomerLoginTest")
 
 //Routee to handle login requests
 router.post("/loginViaEmail", validateCustomerLoginViaEmail, catchAsync(loginHandlerViaEmail));
