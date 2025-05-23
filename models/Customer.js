@@ -11,25 +11,34 @@ Item1 would be like this -> ItemID, Address, Amount, Date, BillingNumber, Phone 
 */
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const customerSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    isVerified: { type: Boolean, default: false },
+    otp: { type: String },
+    otpExpires: { type: Date }
 }, { timestamps: true });
 
-
-// Password hashing middleware before saving the customer
+// Hash password before saving
 customerSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 
-// Method to compare the hashed password with the one entered by the user
-customerSchema.methods.comparePassword = async function (enteredPassword) {
-    return bcrypt.compare(enteredPassword, this.password);
+customerSchema.methods.comparePassword = function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.password);
 };
+
+module.exports = mongoose.model('Customer', customerSchema);
 
 module.exports = mongoose.model('Customer', customerSchema);

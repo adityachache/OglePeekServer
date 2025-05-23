@@ -15,20 +15,28 @@ dotenv.config();
 
 // app and constants
 const PORT = process.env.PORT || 8000;
-const MONGO_LOCAL_URI = process.env.LOCAL_URI || "mongodb://localhost:27017/oglepeek"
+const MONGO_LOCAL_URI = "mongodb://localhost:27017/oglepeek"
 const MONGO_PROD_URI = process.env.PROD_URI || "mongodb://localhost:27017/oglepeek"
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB using Mongoose
-mongoose.connect(MONGO_LOCAL_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('✅ Connected to MongoDB'))
-    .catch(err => {
-        console.error('❌ MongoDB connection error:', err);
-        process.exit(1);
-    });
+//Connect to Database
+async function connectToMongo() {
+    mongoose.set("strictQuery", false);
+    try {
+        await mongoose.connect(MONGO_PROD_URI);
+        console.log("Successfully connected to MongoDB database");
+        console.log("Connected to database:", mongoose.connection.name); // Logs the database name
+    } catch (err) {
+        console.error("Error connecting to MongoDB:", err);
+    }
+}
+
+
+
+connectToMongo().catch(err => console.log("Some error"));
 
 
 //Using the routes
