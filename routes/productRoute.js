@@ -7,7 +7,7 @@ const { createProduct, getAllProducts, deleteProduct } = require('../controllers
 const { authenticate, adminOnly } = require('../middlewares/authMiddleware');
 
 // POST /api/products - Admins only, with images upload
-router.post('/', authenticate, adminOnly, upload.array('images'), createProduct);
+router.post('/', authenticate, adminOnly, upload.any(), createProduct);
 
 //Get all products information
 router.get('/', getAllProducts);
