@@ -3,10 +3,17 @@ const router = express.Router();
 
 const multer = require('multer');
 const upload = multer({ dest: 'tmp/' }); // using disk storage (tmp) for example
-const { createProduct } = require('../controllers/productController');
-const { authenticate, adminOnly } = require('../middleware/authMiddleware');
+const { createProduct, getAllProducts, deleteProduct } = require('../controllers/productController');
+const { authenticate, adminOnly } = require('../middlewares/authMiddleware');
 
 // POST /api/products - Admins only, with images upload
-router.post('/products', authenticate, adminOnly, upload.array('images'), createProduct);
+router.post('/', authenticate, adminOnly, upload.array('images'), createProduct);
+
+//Get all products information
+router.get('/', getAllProducts);
+
+//Delete a product
+router.delete('/:id', adminOnly, deleteProduct);
+
 
 module.exports = router;

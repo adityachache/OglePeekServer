@@ -12,19 +12,21 @@ Item1 would be like this -> ItemID, Address, Amount, Date, BillingNumber, Phone 
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { boolean } = require('joi');
 
-const customerSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
     otp: { type: String },
-    otpExpires: { type: Date }
+    otpExpires: { type: Date },
+    isAdmin: { type: Boolean, require: true, default: false }
 }, { timestamps: true });
 
 // Hash password before saving
-customerSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     try {
         const salt = await bcrypt.genSalt(10);
@@ -35,10 +37,9 @@ customerSchema.pre('save', async function (next) {
     }
 });
 
-customerSchema.methods.comparePassword = function (candidatePassword) {
+userSchema.methods.comparePassword = function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
-module.exports = mongoose.model('Customer', customerSchema);
+module.exports = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model('Customer', customerSchema);

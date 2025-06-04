@@ -1,6 +1,6 @@
 const { customerRegisterTestSchema } = require("./joiSchema")
 
-module.exports.validateCustomerRegisterTest = (req, res, next) => {
+module.exports.validateUserRegisterTest = (req, res, next) => {
     // console.log("Here");
     const { error } = customerRegisterTestSchema.validate(req.body)
 

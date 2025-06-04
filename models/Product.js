@@ -1,25 +1,29 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-    productName: { type: String, required: true },
+// Define sub-schema for a product color variant
+const VariantSchema = new mongoose.Schema({
+    colorName: { type: String, required: true, trim: true },
+    inStock: { type: Number, required: true, min: 0, default: 0 },
+    images: { type: [String], required: true },  // array of image URLs (Cloudinary links)
+    price: { type: Number, required: true, min: 0 },
+    size: { type: String }
+});
+
+
+// Define the main Product schema
+const ProductSchema = new mongoose.Schema({
+    name: { type: String, required: true, trim: true },
     style: { type: String, required: true },    // e.g., Aviator, Wayfarer, etc.
+    description: { type: String, required: true, trim: true },
     lens: { type: String, required: true },    // e.g., Polarized, UV400
     gender: { type: String, required: true },    // e.g., Men, Women, Unisex
     material: { type: String, required: true },    // e.g., Metal, Plastic
-    price: { type: Number, required: true },
-    inStock: { type: Number, default: 0 },        // quantity in stock
-    description: { type: String },                     // optional description of the product
-    size: { type: String },
-    images: {
-        type: [String],
-        required: true,
-        validate: {
-            validator: function (arr) {
-                return arr.length > 0;
-            },
-            message: 'Product must have at least one image.'
-        }
-    }
-}, { timestamps: true });
+    variants: {
+        type: [VariantSchema],
+        validate: [v => v.length > 0, "At least one color variant is required"]
+    },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+});
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Product', ProductSchema);

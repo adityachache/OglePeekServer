@@ -1,6 +1,6 @@
 const { registerSchema } = require("./joiSchema")
 
-module.exports.validateCustomerRegister = (req, res, next) => {
+module.exports.validateUserRegister = (req, res, next) => {
     const { error } = registerSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(', ')

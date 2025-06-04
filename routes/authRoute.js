@@ -11,28 +11,28 @@ const { loginHandlerViaEmailTest, loginHandlerViaPhoneTest, registerTestHandler 
 const catchAsync = require("../utils/catchAsync")
 
 // Testing the req body for register and login (Main Routes)
-const { validateCustomerRegister } = require("../middlewares/validateCustomerRegister");
-const { validateCustomerLoginViaEmail, validateCustomerLoginViaPhone } = require("../middlewares/validateCustomerLogin");
+const { validateUserRegister } = require("../middlewares/validateUserRegister");
+const { validateUserLoginViaEmail, validateUserLoginViaPhone } = require("../middlewares/validateUserLogin");
 
 // Testing the req body for register and login (Without captch Verification)
-const { validateCustomerRegisterTest } = require("../middlewares/validateCustomerRegisterTest");
-const { validateCustomerLoginViaEmailTest, validateCustomerLoginViaPhoneTest } = require("../middlewares/validateCustomerLoginTest")
+const { validateUserRegisterTest } = require("../middlewares/validateUserRegisterTest");
+const { validateUserLoginViaEmailTest, validateUserLoginViaPhoneTest } = require("../middlewares/validateUserLoginTest")
 
 //Routee to handle login requests
-router.post("/login/email", validateCustomerLoginViaEmail, catchAsync(loginHandlerViaEmail));
-router.post("/login/phone", validateCustomerLoginViaPhone, catchAsync(loginHandlerViaPhone));
+router.post("/login/email", validateUserLoginViaEmail, catchAsync(loginHandlerViaEmail));
+router.post("/login/phone", validateUserLoginViaPhone, catchAsync(loginHandlerViaPhone));
 
 //Route to handle registration requests
-router.post("/register", validateCustomerRegister, catchAsync(registerHandler));
+router.post("/register", validateUserRegister, catchAsync(registerHandler));
 
 
 // TestRoute to handle login
-router.post("/login/email/test", validateCustomerLoginViaEmailTest, catchAsync(loginHandlerViaEmailTest));
-router.post("/login/phone/test", validateCustomerLoginViaPhoneTest, catchAsync(loginHandlerViaPhoneTest));
+router.post("/login/email/test", validateUserLoginViaEmailTest, catchAsync(loginHandlerViaEmailTest));
+router.post("/login/phone/test", validateUserLoginViaPhoneTest, catchAsync(loginHandlerViaPhoneTest));
 
 
 //TestRoute to handle registration
-router.post("/registerTest", validateCustomerRegisterTest, catchAsync(registerTestHandler));
+router.post("/registerTest", validateUserRegisterTest, catchAsync(registerTestHandler));
 
 
 //Verify OTP

@@ -20,19 +20,19 @@ module.exports.loginViaPhoneSchema = Joi.object({
     captchaValue: Joi.string().required()
 })
 
-module.exports.customerRegisterTestSchema = Joi.object({
+module.exports.userRegisterTestSchema = Joi.object({
     name: Joi.string().required().alphanum().min(3).max(25),
     email: Joi.string().required(),
     phone: Joi.string().required(),
     password: Joi.string().required().min(8)
 })
 
-module.exports.customerLoginViaEmailTestSchema = Joi.object({
+module.exports.userLoginViaEmailTestSchema = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().required().min(8)
 })
 
-module.exports.customerLoginViaPhoneTestSchema = Joi.object({
+module.exports.userLoginViaPhoneTestSchema = Joi.object({
     phone: Joi.string().required(),
     password: Joi.string().required().min(8)
 })

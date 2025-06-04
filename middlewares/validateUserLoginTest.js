@@ -1,6 +1,6 @@
 const { customerLoginViaEmailTestSchema, customerLoginViaPhoneTestSchema } = require("./joiSchema")
 
-module.exports.validateCustomerLoginViaEmailTest = (req, res, next) => {
+module.exports.validateUserLoginViaEmailTest = (req, res, next) => {
     const { error } = customerLoginViaEmailTestSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(', ')
@@ -10,7 +10,7 @@ module.exports.validateCustomerLoginViaEmailTest = (req, res, next) => {
     }
 }
 
-module.exports.validateCustomerLoginViaPhoneTest = (req, res, next) => {
+module.exports.validateUserLoginViaPhoneTest = (req, res, next) => {
     const { error } = customerLoginViaPhoneTestSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(', ')
