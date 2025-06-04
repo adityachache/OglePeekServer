@@ -1,8 +1,8 @@
-const { customerRegisterTestSchema } = require("./joiSchema")
+const { userRegisterTestSchema } = require("./joiSchema")
 
-module.exports.validateCustomerRegisterTest = (req, res, next) => {
+module.exports.validateUserRegisterTest = (req, res, next) => {
     // console.log("Here");
-    const { error } = customerRegisterTestSchema.validate(req.body)
+    const { error } = userRegisterTestSchema.validate(req.body)
 
     if (error) {
         const msg = error.details.map(el => el.message).join(', ')

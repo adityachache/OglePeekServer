@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const secretKey = process.env.secretKey;
-const Customer = require('../models/Customer')
+const User = require('../models/User')
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const sendEmail = require('../utils/sendEmail');
@@ -24,7 +24,7 @@ module.exports.registerHandler = async (req, res) => {
             return res.status(400).json({ error: "CAPTCHA verification failed!" });
         }
 
-        const existingUser = await Customer.findOne({ $or: [{ email }, { phone }] });
+        const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
         if (existingUser) {
             return res.status(409).json({ message: 'Email or phone already registered' });
         }
@@ -32,7 +32,7 @@ module.exports.registerHandler = async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
         const otpExpires = Date.now() + 10 * 60 * 1000; // valid for 10 minutes
 
-        const customer = new Customer({
+        const user = new User({
             name,
             email,
             phone,
@@ -41,17 +41,17 @@ module.exports.registerHandler = async (req, res) => {
             otpExpires
         });
 
-        const resp = await customer.save()
+        const resp = await user.save()
 
         // Send OTP via email
         await sendEmail(email, 'OglePeek Email Verification', `Your OTP is: ${otp}`);
 
         // Log the saved user document
-        console.log('Customer saved:', resp);
+        console.log('User saved:', resp);
 
-        const data2 = {
-            customer: { id: customer._id }
-        }
+        // const data2 = {
+        //     customer: { id: customer._id }
+        // }
         // console.log(process.env.SECRET);
         res.status(200).json({ success: true, message: 'OTP sent to your email. Please verify.' });
         // res.status(201).json({ success: true, user: resp })
@@ -75,20 +75,20 @@ module.exports.loginHandlerViaEmail = async (req, res) => {
             return res.status(400).json({ error: "CAPTCHA verification failed!" });
         }
         // Find the customer by email
-        const foundCustomer = await Customer.findOne({ email });
-        if (!foundCustomer) {
+        const foundUser = await User.findOne({ email });
+        if (!foundUser) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Compare the password with the hashed password in the database
-        const isMatch = await foundCustomer.comparePassword(password);
+        const isMatch = await foundUser.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Generate JWT token
         const data2 = {
-            customer: { id: foundCustomer._id }
+            user: { id: foundUser._id }
         };
         const authToken = jwt.sign(data2, secretKey, { expiresIn: '1h' });
 
@@ -115,20 +115,20 @@ module.exports.loginHandlerViaPhone = async (req, res) => {
             return res.status(400).json({ error: "CAPTCHA verification failed!" });
         }
         // Find the customer by email
-        const foundCustomer = await Customer.findOne({ phone });
-        if (!foundCustomer) {
+        const foundUser = await User.findOne({ phone });
+        if (!foundUser) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Compare the password with the hashed password in the database
-        const isMatch = await foundCustomer.comparePassword(password);
+        const isMatch = await foundUser.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Generate JWT token
         const data2 = {
-            customer: { id: foundCustomer._id }
+            user: { id: foundUser._id }
         };
         const authToken = jwt.sign(data2, secretKey, { expiresIn: '1h' });
 
@@ -143,24 +143,24 @@ module.exports.verifyOtpHandler = async (req, res) => {
     const { email, otp } = req.body;
 
     try {
-        const customer = await Customer.findOne({ email });
+        const user = await User.findOne({ email });
 
-        if (!customer) {
+        if (!user) {
             return res.status(400).json({ success: false, message: 'User not found' });
         }
 
-        if (customer.isVerified) {
+        if (user.isVerified) {
             return res.status(400).json({ success: false, message: 'User already verified' });
         }
 
-        if (customer.otp !== otp || Date.now() > customer.otpExpires) {
+        if (user.otp !== otp || Date.now() > user.otpExpires) {
             return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
         }
 
-        customer.isVerified = true;
-        customer.otp = undefined;
-        customer.otpExpires = undefined;
-        await customer.save();
+        user.isVerified = true;
+        user.otp = undefined;
+        user.otpExpires = undefined;
+        await user.save();
 
         res.status(200).json({ success: true, message: 'Account verified successfully' });
     } catch (error) {

@@ -14,7 +14,7 @@ module.exports = function (req, res, next) {
 
     try {
         // Verify token and attach user payload to request
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.secretKey);
         req.user = decoded;
         next();
     } catch (err) {
