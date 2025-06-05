@@ -1,6 +1,6 @@
 // controllers/orderController.js
 const Order = require('../models/Order');
-const Customer = require('../models/Customer');
+const User = require('../models/User');
 
 exports.placeOrder = async (req, res) => {
     try {
@@ -8,11 +8,11 @@ exports.placeOrder = async (req, res) => {
         // Optional: Check for existing customer by email or phone
         let customerId = undefined;
         if (email || phone) {
-            const existingCustomer = await Customer.findOne({
+            const existingUser = await User.findOne({
                 $or: [{ email: email }, { phone: phone }]
             });
-            if (existingCustomer) {
-                customerId = existingCustomer._id;
+            if (existingUser) {
+                customerId = existingUser._id;
             }
             // (Optionally, create a new Customer if not found, or handle as guest)
         }
