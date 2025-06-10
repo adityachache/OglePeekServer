@@ -1,8 +1,5 @@
-// controllers/productController.js
 const cloudinary = require("../utils/cloudinaryConfig")
 const Product = require('../models/Product');
-
-// (Assume Cloudinary is already configured with cloudinary.config(...) elsewhere)
 
 exports.createProduct = async (req, res) => {
     try {
