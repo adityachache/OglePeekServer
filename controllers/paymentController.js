@@ -1,8 +1,7 @@
-// controllers/paymentController.js
 const axios = require('axios');
 const Order = require('../models/Order');
 
-const ESEWA_MERCHANT_ID = process.env.MERCHANT_ID;      // eSewa merchant code (e.g., "EPAYTEST" for testing)
+const ESEWA_MERCHANT_ID = process.env.MERCHANT_ID;      // eSewa merchant code
 const ESEWA_PAYMENT_URL = process.env.ESEWAPAYMENT_URL; // eSewa payment endpoint (for redirect/form)
 const ESEWA_VERIFY_URL = process.env.ESEWA_STATUS_URL;  // eSewa transaction verification endpoint
 
@@ -76,7 +75,6 @@ exports.esewaFailure = async (req, res) => {
 };
 
 
-// controllers/paymentController.js (add this function)
 exports.verifyEsewaPayment = async (req, res) => {
     try {
         const { orderId, amount, referenceId } = req.body;

@@ -114,7 +114,7 @@ module.exports.loginHandlerViaPhone = async (req, res) => {
         if (!data.success) {
             return res.status(400).json({ error: "CAPTCHA verification failed!" });
         }
-        // Find the customer by email
+        // Find the customer by phone
         const foundUser = await User.findOne({ phone });
         if (!foundUser) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });

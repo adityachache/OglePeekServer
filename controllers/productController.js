@@ -1,8 +1,5 @@
-// controllers/productController.js
 const cloudinary = require("../utils/cloudinaryConfig")
 const Product = require('../models/Product');
-
-// (Assume Cloudinary is already configured with cloudinary.config(...) elsewhere)
 
 exports.createProduct = async (req, res) => {
     try {
@@ -21,7 +18,6 @@ exports.createProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: 'At least one variant is required.' });
         }
 
-        // Initialize image array for each variant
         variants = variants.map(variant => ({
             ...variant,
             images: []
@@ -129,7 +125,6 @@ exports.updateProduct = async (req, res) => {
             let parsedVariants = variants;
             if (typeof variants === 'string') parsedVariants = JSON.parse(variants);
 
-            // Optional: Replace all variants or selectively update
             if (Array.isArray(parsedVariants)) {
                 parsedVariants.forEach((newVar, i) => {
                     if (product.variants[i]) {

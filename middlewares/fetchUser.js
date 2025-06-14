@@ -6,14 +6,12 @@ module.exports = function (req, res, next) {
         return res.status(401).json({ message: 'No authorization token provided' });
     }
 
-    // Auth header format: "Bearer <token>"
     const token = authHeader.split(' ')[1];
     if (!token) {
         return res.status(401).json({ message: 'Invalid authorization header format' });
     }
 
     try {
-        // Verify token and attach user payload to request
         const decoded = jwt.verify(token, process.env.secretKey);
         req.user = decoded;
         next();
