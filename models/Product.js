@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define sub-schema for a product color variant
 const VariantSchema = new mongoose.Schema({
     colorName: { type: String, required: true, trim: true },
     inStock: { type: Number, required: true, min: 0, default: 0 },
@@ -10,7 +9,6 @@ const VariantSchema = new mongoose.Schema({
 });
 
 
-// Define the main Product schema
 const ProductSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
     style: { type: String, required: true },    // e.g., Aviator, Wayfarer, etc.

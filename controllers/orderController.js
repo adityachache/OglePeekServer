@@ -1,11 +1,9 @@
-// controllers/orderController.js
 const Order = require('../models/Order');
 const User = require('../models/User');
 
 exports.placeOrder = async (req, res) => {
     try {
         const { name, email, phone, address, items } = req.body;
-        // Optional: Check for existing customer by email or phone
         let customerId = undefined;
         if (email || phone) {
             const existingUser = await User.findOne({
@@ -14,10 +12,8 @@ exports.placeOrder = async (req, res) => {
             if (existingUser) {
                 customerId = existingUser._id;
             }
-            // (Optionally, create a new Customer if not found, or handle as guest)
         }
 
-        // Create order document
         const order = new Order({
             customer: customerId || null,            // reference to Customer model if available
             name, email, phone, address,            // store shipping info on the order as well
