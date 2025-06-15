@@ -7,10 +7,12 @@ const adminRoute = require("../routes/adminRoute")
 const authRoute = require("../routes/authRoute")
 const orderRoute = require("../routes/orderRoute")
 const productRoute = require("../routes/productRoute")
+const customRoute = require("../routes/customerRoute");
 
 
 //.env
 const dotenv = require("dotenv");
+const { custom } = require("joi");
 dotenv.config();
 
 // app and constants
@@ -44,6 +46,7 @@ app.use("/api/orders", orderRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/product", productRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/customers", customRoute);
 
 
 app.get("/", (req, res) => {
