@@ -65,6 +65,7 @@ exports.createProduct = async (req, res) => {
 
 // Get all products with full details
 exports.getAllProducts = async (req, res) => {
+    console.log("Fetching all products...");
     try {
         const products = await Product.find({}).lean();
         return res.status(200).json({ products });
@@ -160,3 +161,30 @@ exports.updateProduct = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error while updating product' });
     }
 }
+
+
+
+/*
+
+ <Flex bg="#fbf9f7" cursor="pointer" gap="20">
+      <Menu>
+        <MenuButton
+          bg="#fbf9f7"
+          fontSize="15px"
+          fontWeight="600"
+          _hover={{
+            borderBottom: "4px solid teal"
+          }}
+        >
+          EYEGLASSES
+        </MenuButton>
+
+        <MenuList
+          color="blackAlpha.900"
+          h="400px"
+          bg="whiteAlpha.800"
+          w="100%"
+          p="5"
+        >
+
+*/
