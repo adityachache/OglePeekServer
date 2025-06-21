@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const VariantSchema = new mongoose.Schema({
-    colorName: { type: String, required: true, trim: true },
+    frameColor: { type: String, required: true, trim: true },
     inStock: { type: Number, required: true, min: 0, default: 0 },
     images: { type: [String], required: true },  // array of image URLs (Cloudinary links)
     price: { type: Number, required: true, min: 0 },
@@ -11,11 +11,13 @@ const VariantSchema = new mongoose.Schema({
 
 const ProductSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
-    style: { type: String, required: true },    // e.g., Aviator, Wayfarer, etc.
+    frameStyle: { type: String, required: true },    // e.g., Aviator, Wayfarer, etc.
     description: { type: String, required: true, trim: true },
     lens: { type: String, required: true },    // e.g., Polarized, UV400
     gender: { type: String, required: true },    // e.g., Men, Women, Unisex
     material: { type: String, required: true },    // e.g., Metal, Plastic
+    productType: { type: String, required: true }, // e.g., Eyeglasses, Sunglasses
+    frameType: { type: String, required: true }, // e.g., Full Rim, Half Rim, Rimless
     variants: {
         type: [VariantSchema],
         validate: [v => v.length > 0, "At least one color variant is required"]
