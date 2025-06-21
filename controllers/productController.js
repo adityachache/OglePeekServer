@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 
 exports.createProduct = async (req, res) => {
     try {
-        const { name, style, description, lens, gender, material } = req.body;
+        const { name, frameStyle, description, lens, gender, material, productType, frameType } = req.body;
         let variants = req.body.variants;
 
         if (!variants) {
@@ -39,17 +39,19 @@ exports.createProduct = async (req, res) => {
         // Ensure each variant has at least one image
         for (const variant of variants) {
             if (!variant.images || variant.images.length === 0) {
-                return res.status(400).json({ success: false, message: `Variant '${variant.colorName}' must have at least one image.` });
+                return res.status(400).json({ success: false, message: `Variant '${variant.frameColor}' must have at least one image.` });
             }
         }
 
         const product = new Product({
             name,
-            style,
+            frameStyle,
             description,
             lens,
             gender,
             material,
+            productType,
+            frameType,
             variants
         });
 
@@ -71,6 +73,50 @@ exports.getAllProducts = async (req, res) => {
         return res.status(200).json({ products });
     } catch (err) {
         return res.status(500).json({ error: "Failed to fetch products", details: err.message });
+    }
+};
+
+exports.getProductsWithFilterAndPagination = async (req, res) => {
+    try {
+        const {
+            sort,
+            frameStyle,
+            productType,
+            frameType,
+            frameColor,
+            gender,
+            material,
+            lens,
+            page = 0,
+            limit = 10
+        } = req.query;
+
+        const filter = {};
+
+        if (frameStyle) filter.frameStyle = frameStyle;
+        if (productType) filter.productType = productType;
+        if (frameType) filter.frameType = frameType;
+        if (gender) filter.gender = gender;
+        if (material) filter.material = material;
+        if (lens) filter.lens = lens;
+
+        if (frameColor) {
+            filter["variants.frameColor"] = frameColor;
+        }
+
+        let sortOption = {};
+        if (sort === "lowtohigh") sortOption = { "variants.price": 1 };
+        else if (sort === "hightolow") sortOption = { "variants.price": -1 };
+
+        const products = await Product.find(filter)
+            .sort(sortOption)
+            .skip(Number(page) * Number(limit))
+            .limit(Number(limit));
+
+        res.status(200).json(products);
+    } catch (error) {
+        console.error("Error fetching filtered products:", error);
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -113,7 +159,7 @@ exports.updateProduct = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
 
-        const { name, style, description, lens, gender, material, variants } = req.body;
+        const { name, frameStyle, description, lens, gender, material, productType, frameType, variants } = req.body;
 
         if (name) product.name = name;
         if (style) product.style = style;
@@ -121,6 +167,8 @@ exports.updateProduct = async (req, res) => {
         if (lens) product.lens = lens;
         if (gender) product.gender = gender;
         if (material) product.material = material;
+        if (productType) product.productType = productType;
+        if (frameType) product.frameType = frameType;
 
         if (variants) {
             let parsedVariants = variants;
@@ -129,7 +177,7 @@ exports.updateProduct = async (req, res) => {
             if (Array.isArray(parsedVariants)) {
                 parsedVariants.forEach((newVar, i) => {
                     if (product.variants[i]) {
-                        product.variants[i].colorName = newVar.colorName || product.variants[i].colorName;
+                        product.variants[i].frameColor = newVar.frameColor || product.variants[i].frameColor;
                         product.variants[i].inStock = newVar.inStock !== undefined ? newVar.inStock : product.variants[i].inStock;
                         product.variants[i].price = newVar.price || product.variants[i].price;
                         product.variants[i].size = newVar.size || product.variants[i].size;
@@ -164,27 +212,3 @@ exports.updateProduct = async (req, res) => {
 
 
 
-/*
-
- <Flex bg="#fbf9f7" cursor="pointer" gap="20">
-      <Menu>
-        <MenuButton
-          bg="#fbf9f7"
-          fontSize="15px"
-          fontWeight="600"
-          _hover={{
-            borderBottom: "4px solid teal"
-          }}
-        >
-          EYEGLASSES
-        </MenuButton>
-
-        <MenuList
-          color="blackAlpha.900"
-          h="400px"
-          bg="whiteAlpha.800"
-          w="100%"
-          p="5"
-        >
-
-*/
