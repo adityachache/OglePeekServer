@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const User = require("../models/User");
 //Test indicates that the route doesn't requires captcha verification for login and registration
-
+const verifyAuthToken = require("../middlewares/verifyAuthToken");
 //Main Auth Controller
 const { loginHandlerViaEmail, verifyOtpHandler, loginHandlerViaPhone, registerHandler } = require("../controllers/authController");
 
@@ -37,5 +38,26 @@ router.post("/registerTest", validateUserRegisterTest, catchAsync(registerTestHa
 
 //Verify OTP
 router.post('/verify-otp', verifyOtpHandler);
+
+router.post("/logout", (req, res) => {
+    res.clearCookie("authToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict"
+    });
+    res.json({ success: true });
+});
+
+router.post("/check", verifyAuthToken, async (req, res) => {
+    try {
+        // console.log(req)
+        const user = await User.findById(req.user.user.id).select("name");
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.status(200).json({ success: true, firstName: user.name });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 module.exports = router;

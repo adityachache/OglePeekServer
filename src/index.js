@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 
 //Routes
@@ -21,8 +22,14 @@ const MONGO_LOCAL_URI = "mongodb://localhost:27017/oglepeek"
 const MONGO_PROD_URI = process.env.PROD_URI || "mongodb://localhost:27017/oglepeek"
 
 const app = express();
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true
+    })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 //Connect to Database
 async function connectToMongo() {

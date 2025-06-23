@@ -19,7 +19,7 @@ router.get('/:id', getProductById);
 router.get('/all', getAllProducts);
 
 //Delete a product
-router.delete('/:id', adminOnly, deleteProduct);
+router.delete('/:id', authenticate, adminOnly, deleteProduct);
 
 
 module.exports = router;

@@ -69,8 +69,19 @@ module.exports.loginHandlerViaEmailTest = async (req, res) => {
             user: { id: foundUser._id }
         };
         const authToken = jwt.sign(data2, secretKey, { expiresIn: '1h' });
+        res.cookie("authToken", authToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+            maxAge: 24 * 60 * 60 * 1000
+        });
 
-        res.status(200).json({ success: true, authToken, firstName: foundUser.name });
+        res.status(200).json({
+            success: true,
+            firstName: foundUser.name
+        });
+
+        // res.status(200).json({ success: true, authToken, firstName: foundUser.name });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
