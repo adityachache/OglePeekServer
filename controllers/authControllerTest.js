@@ -39,14 +39,6 @@ module.exports.registerTestHandler = async (req, res) => {
 
         // Send OTP via email
         await sendEmail(email, 'OglePeek Email Verification', `Your OTP is: ${otp}`);
-
-        // Log the saved user document
-        // console.log('User saved:', resp);
-
-        // const data2 = {
-        //     customer: { id: customer._id }
-        // }
-        // // console.log(process.env.SECRET);
         res.status(200).json({ success: true, message: 'OTP sent to your email. Please verify.' });
 
     } catch (error) {
@@ -78,7 +70,7 @@ module.exports.loginHandlerViaEmailTest = async (req, res) => {
         };
         const authToken = jwt.sign(data2, secretKey, { expiresIn: '1h' });
 
-        res.status(200).json({ success: true, authToken });
+        res.status(200).json({ success: true, authToken, firstName: foundUser.name });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
