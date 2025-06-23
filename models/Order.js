@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    items: [{
-        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-        quantity: { type: Number, required: true }
-    }],
+    cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart', required: true },
     totalAmount: { type: Number },    // total price of all items at purchase time
     customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', default: null },
     name: { type: String, required: true },    // customer's name (for shipping)

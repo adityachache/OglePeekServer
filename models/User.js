@@ -12,13 +12,13 @@ Item1 would be like this -> ItemID, Address, Amount, Date, BillingNumber, Phone 
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const { boolean } = require('joi');
+const { boolean, required } = require('joi');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true, unique: true },
-    password: { type: String },
+    password: { type: String, required: true, minlength: 6 },
     isVerified: { type: Boolean, default: false },
     otp: { type: String },
     otpExpires: { type: Date },
