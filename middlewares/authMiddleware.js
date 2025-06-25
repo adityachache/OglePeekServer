@@ -17,7 +17,11 @@ const User = require('../models/User');
 
 
 exports.authenticate = (req, res, next) => {
+    console.log("Auth middleware called");
     const token = req.cookies.authToken;
+    console.log("Token from cookies:", token);
+    // console.log(req)
+    // console.log(req.cookies)
     if (!token) return res.status(401).json({ message: "Not authenticated" });
 
     try {
