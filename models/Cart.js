@@ -26,6 +26,10 @@ const CartSchema = new mongoose.Schema({
         unique: true
     },
     items: [CartItemSchema],
+    peekCoins: {
+        type: Number,
+        default: 0
+    },
     updatedAt: {
         type: Date,
         default: Date.now

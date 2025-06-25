@@ -68,12 +68,12 @@ module.exports.loginHandlerViaEmailTest = async (req, res) => {
         const data2 = {
             user: { id: foundUser._id }
         };
-        const authToken = jwt.sign(data2, secretKey, { expiresIn: '24h' });
+        const authToken = jwt.sign(data2, secretKey, { expiresIn: '365d' });
         res.cookie("authToken", authToken, {
             httpOnly: true,
             secure: true,
             sameSite: "Strict",
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 365 * 24 * 60 * 60 * 1000
         });
 
         res.status(200).json({

@@ -1,10 +1,15 @@
 const Cart = require('../models/Cart'); // Assuming you have a Cart model defined
+const mongoose = require("mongoose")
 
 const addOrUpdateCartItem = async (req, res) => {
-    const { productId, variantId, quantity } = req.body;
-    const userId = req.user.user.id;
-
     try {
+        let { productId, variantId, quantity } = req.body;
+        const userId = req.user.user.id;
+
+        if (typeof quantity !== "number") {
+            quantity = Number(quantity);
+        }
+
         let cart = await Cart.findOne({ userId });
 
         if (!cart) {
@@ -15,15 +20,17 @@ const addOrUpdateCartItem = async (req, res) => {
         } else {
             const itemIndex = cart.items.findIndex(
                 (item) =>
-                    item.productId.toString() === productId &&
-                    item.variantId.toString() === variantId
+                    item.productId.toString() === productId.toString() &&
+                    item.variantId.toString() === variantId.toString()
             );
 
             if (itemIndex > -1) {
-                // Update quantity
                 cart.items[itemIndex].quantity += quantity;
+
+                if (cart.items[itemIndex].quantity <= 0) {
+                    cart.items.splice(itemIndex, 1);
+                }
             } else {
-                // Add new item
                 cart.items.push({ productId, variantId, quantity });
             }
         }
@@ -31,12 +38,12 @@ const addOrUpdateCartItem = async (req, res) => {
         cart.updatedAt = Date.now();
         await cart.save();
         res.status(200).json({ success: true, cart });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Failed to update cart' });
+        res.status(500).json({ success: false, message: 'Failed to update cart', error });
     }
 };
-
 
 const removeCartItem = async (req, res) => {
     const { productId, variantId } = req.body;
@@ -118,7 +125,7 @@ const getCartItems = async (req, res) => {
             };
         });
 
-        return res.status(200).json({ success: true, items: detailedItems });
+        return res.status(200).json({ success: true, items: detailedItems, peekCoins: cart.peekCoins });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ success: false, message: 'Failed to fetch cart items' });
