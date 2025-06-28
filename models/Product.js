@@ -5,7 +5,8 @@ const VariantSchema = new mongoose.Schema({
     inStock: { type: Number, required: true, min: 0, default: 0 },
     images: { type: [String], required: true },  // array of image URLs (Cloudinary links)
     price: { type: Number, required: true, min: 0 },
-    size: { type: String }
+    size: { type: String },
+    hidden: { type: Boolean }
 });
 
 

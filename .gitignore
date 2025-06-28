@@ -4,4 +4,4 @@ node_modules/
 # Ignore environment variable files
 .env
 
-Migration/migration.js
+# Migration/migration.js
